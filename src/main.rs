@@ -33,6 +33,7 @@ async fn main() {
     let app = Router::new()
         .route("/", get(health_check))
         .route("/api/chat", post(presentation::handlers::chat_handler))
+        .route("/api/prompt", post(presentation::handlers::prompt_handler))
         .with_state(config);
 
     // Create TCP listener

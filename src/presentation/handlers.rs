@@ -36,4 +36,34 @@ pub async fn chat_handler(
         .await
         .map(Json)
         .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))
+}
+
+pub async fn prompt_handler(
+    State(config): State<Config>,
+    Json(request): Json<ChatRequest>,
+) -> Result<Json<ApiResponse>, (StatusCode, String)> {
+    // Validate request
+    if request.messages.is_empty() {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            "Messages array cannot be empty".to_string(),
+        ));
+    }
+
+    // Validate model
+    if request.model.is_empty() {
+        return Err((
+            StatusCode::BAD_REQUEST,
+            "Model must be specified".to_string(),
+        ));
+    }
+
+    let client = OpenRouterClient::new(config);
+    let service = ChatService::new(client);
+
+    service
+        .process_chat(request)
+        .await
+        .map(Json)
+        .map_err(|e| (StatusCode::INTERNAL_SERVER_ERROR, e))
 } 

@@ -1,11 +1,12 @@
 use crate::domain::models::{ChatRequest, ApiResponse};
 use crate::infrastructure::openrouter_client::OpenRouterClient;
 
-const SUPPORTED_MODELS: [&str; 4] = [
+const SUPPORTED_MODELS: [&str; 5] = [
     "openai/gpt-3.5-turbo",
     "openai/gpt-4",
     "anthropic/claude-3-5-sonnet",
     "meta-llama/llama-3.2-3b-instruct:free",
+    "meta-llama/llama-3.2-1b-instruct:free",
 ];
 
 pub struct ChatService {

@@ -4,7 +4,9 @@ A Rust web service that provides a REST API for AI model interactions using the 
 
 ## Features
 
-- Chat completion endpoint with multiple AI models support
+- Multiple endpoints for AI model interactions:
+  - `/api/chat` for basic chat completions
+  - `/api/prompt` for enhanced message formatting
 - Support for OpenAI and Anthropic models
 - Environment-based configuration
 - Health check endpoint
@@ -60,7 +62,7 @@ Returns "AI API Server is running" if the server is operational.
 
 ### Chat Completion Endpoint
 
-The `/api/chat` endpoint allows you to interact with various AI models through OpenRouter.
+The `/api/chat` endpoint provides basic chat completion functionality.
 
 #### Request Format
 
@@ -79,14 +81,79 @@ Content-Type: application/json
 }
 ```
 
-#### Supported Models
+### Prompt Endpoint
+
+The `/api/prompt` endpoint provides enhanced message formatting capabilities while maintaining compatibility with all supported models.
+
+#### Request Format
+
+```http
+POST /api/prompt
+Content-Type: application/json
+
+{
+    "model": "anthropic/claude-3-5-sonnet",
+    "messages": [
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "You are a helpful assistant."
+                }
+            ]
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What is the meaning of life?"
+                }
+            ]
+        }
+    ]
+}
+```
+
+The endpoint supports two content formats:
+
+1. Simple string content (same as `/api/chat`):
+```json
+"content": "Your message here"
+```
+
+2. Structured content with parts:
+```json
+"content": [
+    {
+        "type": "text",
+        "text": "Your message here"
+    }
+]
+```
+
+#### Supported Message Roles
+
+- `user`: For user messages
+- `assistant`: For AI responses
+- `system`: For system instructions
+- `tool`: For tool responses (requires `tool_call_id`)
+
+#### Optional Fields
+
+- `name`: Optional identifier for the message sender
+- `tool_call_id`: Required for `tool` role messages
+
+### Supported Models
 
 - `openai/gpt-3.5-turbo`
 - `openai/gpt-4`
 - `anthropic/claude-3-5-sonnet`
 - `meta-llama/llama-3.2-3b-instruct:free`
+- `meta-llama/llama-3.2-1b-instruct:free`
 
-#### Response Format
+### Response Format
 
 ```json
 {
@@ -97,7 +164,7 @@ Content-Type: application/json
 }
 ```
 
-#### Error Responses
+### Error Responses
 
 - `400 Bad Request`: When messages array is empty or model is not specified
 - `400 Bad Request`: When an unsupported model is specified

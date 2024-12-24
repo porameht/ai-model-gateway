@@ -1,4 +1,4 @@
-# AI API Server
+# AI Model Switcher
 
 A Rust web service that provides a REST API for AI model interactions using the OpenRouter API.
 
@@ -23,7 +23,7 @@ A Rust web service that provides a REST API for AI model interactions using the 
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd ai-api-server
+cd ai-model-switcher
 ```
 
 2. Create a `.env` file in the project root:

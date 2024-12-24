@@ -29,7 +29,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the binary from builder
-COPY --from=builder /usr/src/app/target/release/ai-api-server /app/ai-api-server
+COPY --from=builder /usr/src/app/target/release/ai-model-switcher /app/ai-model-switcher
 
 # Use the non-root user
 RUN chown -R appuser:appuser /app
@@ -43,4 +43,4 @@ ENV RUST_LOG=info
 ENV PORT=80
 
 # Run the binary
-CMD ["./ai-api-server"] 
+CMD ["./ai-model-switcher"] 

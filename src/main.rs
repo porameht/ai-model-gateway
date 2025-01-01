@@ -9,6 +9,7 @@ use axum::{
     Router,
 };
 use dotenv::dotenv;
+use tower_http::cors::{CorsLayer, Any};
 use crate::config::Config;
 
 // Basic health check handler
@@ -29,11 +30,18 @@ async fn main() {
     let host = config.server_host.clone();
     let port = config.server_port;
 
-    // Build our application with routes
+    // Create CORS layer
+    let cors = CorsLayer::new()
+        .allow_origin(Any)
+        .allow_methods(Any)
+        .allow_headers(Any);
+
+    // Build our application with routes and CORS
     let app = Router::new()
         .route("/", get(health_check))
         .route("/api/chat", post(presentation::handlers::chat_handler))
         .route("/api/prompt", post(presentation::handlers::prompt_handler))
+        .layer(cors)
         .with_state(config);
 
     // Create TCP listener

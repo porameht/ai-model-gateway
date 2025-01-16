@@ -1,0 +1,124 @@
+@baseUrl = {{$dotenv SERVER_HOST}}:{{$dotenv SERVER_PORT}}
+@apiKey = {{$dotenv OPENROUTER_API_KEY}}
+@apiUrl = {{$dotenv OPENROUTER_API_URL}}
+
+### Root Health Check
+GET http://{{baseUrl}}/
+Content-Type: application/json
+
+### Test OpenRouter Chat Completion API (Direct)
+POST {{apiUrl}}
+Content-Type: application/json
+Authorization: Bearer {{apiKey}}
+
+{
+    "model": "anthropic/claude-3-sonnet",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hello, how are you?"
+        }
+    ]
+}
+
+### Test Chat API Endpoint
+POST http://{{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": [
+        {
+            "role": "user",
+            "content": "What is the capital of France?"
+        }
+    ]
+}
+
+### Test Prompt API Endpoint with Simple Content
+POST http://{{baseUrl}}/api/prompt
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant."
+        },
+        {
+            "role": "user",
+            "content": "What is the capital of France?"
+        }
+    ]
+}
+
+### Test Prompt API Endpoint with Structured Content
+POST http://{{baseUrl}}/api/prompt
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": [
+        {
+            "role": "system",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "You are a helpful assistant."
+                }
+            ]
+        },
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "text",
+                    "text": "What is the capital of bangkok?"
+                }
+            ]
+        }
+    ]
+}
+
+### Test with Unsupported Model (Should Return Error)
+POST http://{{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": [
+        {
+            "role": "user",
+            "content": "Hello"
+        }
+    ]
+}
+
+### Test with Empty Messages (Should Return Error)
+POST http://{{baseUrl}}/api/chat
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": []
+}
+
+### Test with Tool Message
+POST http://{{baseUrl}}/api/prompt
+Content-Type: application/json
+
+{
+    "model": "meta-llama/llama-3.2-3b-instruct:free",
+    "messages": [
+        {
+            "role": "user",
+            "content": "What's the weather?"
+        },
+        {
+            "role": "tool",
+            "content": "The weather is sunny and 22°C",
+            "tool_call_id": "weather_check_1"
+        }
+    ]
+} 

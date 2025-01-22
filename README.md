@@ -1,4 +1,4 @@
-# AI Model Switcher
+# AI Model Gateway
 
 A Rust web service that provides a REST API for AI model interactions using the OpenRouter API.
 
